@@ -41,7 +41,7 @@
 ### 2. 作品データベース管理
 - [ConnectToDatabase.pde](./fude_veatpro_android6/ConnectToDatabase.pde) / [DBHelper.pde](./fude_veatpro_android6/DBHelper.pde)
   - SQLiteを用いたデータベースの管理，アクセスの制御．
-- [saveScreenshotToDatabase.pde](./fude_veatpro_android6/saveScreenshotToDatabase.pde)
+- [saveScreenshotToDatabase.pde](./fude_veatpro_android6/SaveScreenshotToDatabase.pde)
   - 描画画面をバイト列（Blob）へ変換しデータベースへ格納．
 - [LoadImageFromBytes.pde](./fude_veatpro_android6/LoadImageFromBytes.pde) / [LoadImages.pde](./fude_veatpro_android6/LoadImages.pde)
   - データベースから取り出したバイト列を画像に変換してロード．
@@ -55,7 +55,7 @@
   - 他画面に遷移した際に，ギャラリー画面に表示されている作品を画面から削除する．
  
 ### 3. シーン別の処理
-- [fude_veatpro_android6](./fude_veatpro_android6/fude_veatpro_android6)
+- [fude_veatpro_android6](./fude_veatpro_android6/fude_veatpro_android6.pde)
   - 全てのシーンへの遷移やシステムのメイン動作の処理．
 - [display_change.pde](./fude_veatpro_android6/display_change.pde)
   - 他シーンに映る際の待ち時間．
@@ -65,7 +65,7 @@
 ### 4. UI制御
 - [Button.pde](./fude_veatpro_android6/Button.pde)
   - ボタン変数の宣言とボタンクラスの作成．
-- [Image.pde](./fude_veatpro_android6/Image.pde)
+- [image.pde](./fude_veatpro_android6/image.pde)
   - 各種ボタン，硯，筆，描画領域，タイトル画面などのイラストの宣言．
 - [TextBox.pde](./fude_veatpro_android6/TextBox.pde)
   - テキストボックス変数の宣言とテキストボックスクラスの作成．
