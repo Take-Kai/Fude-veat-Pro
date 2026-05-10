@@ -41,7 +41,7 @@
 ### 2. 作品データベース管理
 - [ConnectToDatabase.pde](./fude_veatpro_android6/ConnectToDatabase.pde) / [DBHelper.pde](./fude_veatpro_android6/DBHelper.pde)
   - SQLiteを用いたデータベースの管理，アクセスの制御．
-- [saveScreenshotToDatabase.pde](./fude_veatpro_android6/SaveScreenshotToDatabase.pde)
+- [SaveScreenshotToDatabase.pde](./fude_veatpro_android6/SaveScreenshotToDatabase.pde)
   - 描画画面をバイト列（Blob）へ変換しデータベースへ格納．
 - [LoadImageFromBytes.pde](./fude_veatpro_android6/LoadImageFromBytes.pde) / [LoadImages.pde](./fude_veatpro_android6/LoadImages.pde)
   - データベースから取り出したバイト列を画像に変換してロード．
