@@ -22,52 +22,52 @@
 ### 1. 書道表現を再現する筆跡描画アルゴリズム
 毛筆特有の掠れや筆跡を再現するため，様々な手法を考案．
 - **タッチ検知と筆圧による線の太さ変化**
-  - [surfaceTouchEvent.pde](./fude_veat_android6/surfaceTouchEvent.pde)
+  - [surfaceTouchEvent.pde](./fude_veatpro_android6/surfaceTouchEvent.pde)
     - タブレット画面へのタッチを検知し，画面に加わった圧力値を取得する．
     - 取得した圧力値は非常に小さく，その変化も微小なため，累乗変換をして筆跡描画の適用．
 - **掠れ線の描画**
-  - [Kasure.pde](./fude_veat_android6/Kasure.pde)
+  - [Kasure.pde](./fude_veatpro_android6/Kasure.pde)
     - 筆を一定速度以上で描画/墨量が一定量以上減少すると掠れ線へ移行する．
     - 掠れ線は複数の線と点を同時に描画する手法によって再現．
 - **永字八法の再現**
   - 永字八法を再現するため，4つの図形を組み合わせた「筆跡モデル」を考案．
   - 筆跡モデルは，1.黒線，2.雫型透過画像，3.毛先の広がり線，4.側面補間線により構成．
-  - [fude_line.pde](./fude_veat_android6/fude_line.pde)
-    - 毛先の広がり線の広がり方を筆圧によって制御．他の図形は[scene_play.pde](./fude_veat_android6/scene_play.pde)にて制御．
-  - [deg_get.pde](./fude_veat_android6/deg_get.pde) / [deg_reset.pde](./fude_veat_android6/deg_reset.pde)
+  - [fude_line.pde](./fude_veatpro_android6/fude_line.pde)
+    - 毛先の広がり線の広がり方を筆圧によって制御．他の図形は[scene_play.pde](./fude_veatpro_android6/scene_play.pde)にて制御．
+  - [deg_get.pde](./fude_veatpro_android6/deg_get.pde) / [deg_reset.pde](./fude_veatpro_android6/deg_reset.pde)
     - 書道は筆は細かく回転し，その挙動によって筆跡が変化する．
     - 現在の筆の進行方向などを取得し，目標の筆角度になるように筆跡モデルを回転制御．
 
 ### 2. 作品データベース管理
-- [ConnectToDatabase.pde](./fude_veat_android6/ConnectToDatabase.pde) / [DBHelper.pde](./fude_veat_android6/DBHelper.pde)
+- [ConnectToDatabase.pde](./fude_veatpro_android6/ConnectToDatabase.pde) / [DBHelper.pde](./fude_veatpro_android6/DBHelper.pde)
   - SQLiteを用いたデータベースの管理，アクセスの制御．
-- [saveScreenshotToDatabase.pde](./fude_veat_android6/saveScreenshotToDatabase.pde)
+- [saveScreenshotToDatabase.pde](./fude_veatpro_android6/saveScreenshotToDatabase.pde)
   - 描画画面をバイト列（Blob）へ変換しデータベースへ格納．
-- [LoadImageFromBytes.pde](./fude_veat_android6/LoadImageFromBytes.pde) / [LoadImages.pde](./fude_veat_android6/LoadImages.pde)
+- [LoadImageFromBytes.pde](./fude_veatpro_android6/LoadImageFromBytes.pde) / [LoadImages.pde](./fude_veatpro_android6/LoadImages.pde)
   - データベースから取り出したバイト列を画像に変換してロード．
-- [DisplayGallery.pde](./fude_veat_android6/DisplayGallery.pde)
+- [DisplayGallery.pde](./fude_veatpro_android6/DisplayGallery.pde)
   - ロードした作品をギャラリー画面に表示．
-- [SelectImage.pde](SelectImage.pde) / [ShowImageInfo.pde](./fude_veat_android6/ShowImageInfo.pde)
+- [SelectImage.pde](./fude_veatpro_android6/SelectImage.pde) / [ShowImageInfo.pde](./fude_veatpro_android6/ShowImageInfo.pde)
   - 表示された任意の作品をタップすると，作品の作成日時・タイトルなどの詳細を表示．
-- [DeleteSelectedImage.pde](DeleteSelectedImage.pde) / [RemoveImageFromArray.pde](./fude_veat_android6/RemoveImageFromArray.pde)
+- [DeleteSelectedImage.pde](./fude_veatpro_android6/DeleteSelectedImage.pde) / [RemoveImageFromArray.pde](./fude_veatpro_android6/RemoveImageFromArray.pde)
   - 選択した任意の作品を削除する（画面表示/データベース両方削除）．
-- [clearGallery.pde](./fude_veat_android6/clearGallery.pde)
+- [clearGallery.pde](./fude_veatpro_android6/clearGallery.pde)
   - 他画面に遷移した際に，ギャラリー画面に表示されている作品を画面から削除する．
  
 ### 3. シーン別の処理
-- [fude_veatpro_android6](./fude_veat_android6/fude_veatpro_android6)
+- [fude_veatpro_android6](./fude_veatpro_android6/fude_veatpro_android6)
   - 全てのシーンへの遷移やシステムのメイン動作の処理．
-- [display_change.pde](./fude_veat_android6/display_change.pde)
+- [display_change.pde](./fude_veatpro_android6/display_change.pde)
   - 他シーンに映る際の待ち時間．
-- [scene_title.pde](./fude_veat_android6/scene_title.pde) / [scene_play.pde](./fude_veat_android6/scene_play.pde) / [scene_help.pde](./fude_veat_android6/scene_help.pde) / [scene_gallery.pde](./fude_veat_android6/scene_gallery.pde)
+- [scene_title.pde](./fude_veatpro_android6/scene_title.pde) / [scene_play.pde](./fude_veatpro_android6/scene_play.pde) / [scene_help.pde](./fude_veatpro_android6/scene_help.pde) / [scene_gallery.pde](./fude_veatpro_android6/scene_gallery.pde)
   - 各シーン別の処理．特にプレイ画面の制御では，書道特有の筆跡描画に関する記述があります．
 
 ### 4. UI制御
-- [Button.pde](./fude_veat_android6/Button.pde)
+- [Button.pde](./fude_veatpro_android6/Button.pde)
   - ボタン変数の宣言とボタンクラスの作成．
-- [Image.pde](./fude_veat_android6/Image.pde)
+- [Image.pde](./fude_veatpro_android6/Image.pde)
   - 各種ボタン，硯，筆，描画領域，タイトル画面などのイラストの宣言．
-- [TextBox.pde](./fude_veat_android6/TextBox.pde)
+- [TextBox.pde](./fude_veatpro_android6/TextBox.pde)
   - テキストボックス変数の宣言とテキストボックスクラスの作成．
-- [clearDrawing.pde](./fude_veat_android6/clearDrawing.pde)
+- [clearDrawing.pde](./fude_veatpro_android6/clearDrawing.pde)
   - 描画領域のリセット．
