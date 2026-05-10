@@ -93,7 +93,7 @@
 - PGraphicsはProcessingの描画バッファのひとつであり，ピクセル単位で描画を管理できます．
 - 以下のプログラムにより新たな掠れ表現手法を考案しました．
 
-###PGraphicsによるピクセルレベルでの掠れ表現手法
+### PGraphicsによるピクセルレベルでの掠れ表現手法
 - [Kasure_test13.pde](./Kasure_test13_Kasure_test13.pde)
 - **各種パラメータ**
   - `holeCount`：ピクセルの抜け数を管理し，掠れの密度を制御．
