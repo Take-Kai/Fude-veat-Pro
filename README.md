@@ -2,7 +2,7 @@
 
 八戸高専本科5年生〜専攻科2年までの3年間，研究テーマとして取り組みました．
 
-このシステムは、タブレット端末を用いて仮想的に書道表現を行うことができるシステムです．
+このシステムは，タブレット端末を用いて仮想的に書道表現を行うことができるシステムです．
 
 実際の書道筆に導電加工を施した「水導電筆」とProcessingで構築した書道表現を再現するアルゴリズムを組み合わせ，デジタル上で本物に近い書道体験を実現できます．
 
@@ -24,13 +24,13 @@
 - **タッチ検知と筆圧による線の太さ変化**
   - [surfaceTouchEvent.pde](./fude_veatpro_android6/surfaceTouchEvent.pde)
     - タブレット画面へのタッチを検知し，画面に加わった圧力値を取得する．
-    - 取得した圧力値は非常に小さく，その変化も微小なため，累乗変換をして筆跡描画の適用．
+    - 取得した圧力値は非常に小さく，その変化も微小なため，累乗変換をして筆跡に適用．
 - **掠れ線の描画**
   - [Kasure.pde](./fude_veatpro_android6/Kasure.pde)
     - 筆を一定速度以上で描画/墨量が一定量以上減少すると掠れ線へ移行する．
     - 掠れ線は複数の線と点を同時に描画する手法によって再現．
 - **永字八法の再現**
-  - 永字八法を再現するため，4つの図形を組み合わせた「筆跡モデル」を考案．
+  - 永字八法（とめ・はね・はらいなど）を再現するため，4つの図形を組み合わせた「筆跡モデル」を考案．
   - 筆跡モデルは，1.黒線，2.雫型透過画像，3.毛先の広がり線，4.側面補間線により構成．
   - [fude_line.pde](./fude_veatpro_android6/fude_line.pde)
     - 毛先の広がり線の広がり方を筆圧によって制御．他の図形は[scene_play.pde](./fude_veatpro_android6/scene_play.pde)にて制御．
@@ -58,7 +58,7 @@
 - [fude_veatpro_android6](./fude_veatpro_android6/fude_veatpro_android6.pde)
   - 全てのシーンへの遷移やシステムのメイン動作の処理．
 - [display_change.pde](./fude_veatpro_android6/display_change.pde)
-  - 他シーンに映る際の待ち時間．
+  - 他シーンに移る際の待ち時間．
 - [scene_title.pde](./fude_veatpro_android6/scene_title.pde) / [scene_play.pde](./fude_veatpro_android6/scene_play.pde) / [scene_help.pde](./fude_veatpro_android6/scene_help.pde) / [scene_gallery.pde](./fude_veatpro_android6/scene_gallery.pde)
   - 各シーン別の処理．特にプレイ画面の制御では，書道特有の筆跡描画に関する記述があります．
 
@@ -88,8 +88,8 @@
 ---
 
 ## 🖌️ 掠れ表現の改良
-- 私が考案してきた掠れ表現の手法は主に，図形の組み合わせにより実装していました．
-- しかし，その手法には処理の重さやリアルさへの限界を感じたため，PGraphicsによる手法を考えました．
+- 私が考案してきた掠れ表現の手法は主に，図形の組み合わせによるものでした．
+- しかし，その手法にはリアルさを追求すると処理が重くなるというトレードオフが生じたため，新たにPGraphicsによる手法を考えました．
 - PGraphicsはProcessingの描画バッファのひとつであり，ピクセル単位で描画を管理できます．
 - 以下のプログラムにより新たな掠れ表現手法を考案しました．
 
