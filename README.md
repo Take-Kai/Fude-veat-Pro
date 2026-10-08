@@ -15,61 +15,75 @@
 - **Database**：SQLite
 - **Analysis**：Python, OpenCV（筆跡の画像解析） / EZR（統計解析）
 - **Hardware**：HUAWEI / Xiaomiタブレット，自作の水導電筆
+- **Font**：YujiSyuku（SIL Open Font License）
 
 ---
 
 ## 📁 主要システムの構造
+現在のメインシステムは[fude_veatpro_android8](./fude_veatpro_android8/)です．以前の版は[fude_veatpro_android6](./fude_veatpro_android6/)に残しています（android6からの変更点は[下記](#-android6からの変更点)）．
+
 ### 1. 書道表現を再現する筆跡描画アルゴリズム
 毛筆特有の掠れや筆跡を再現するため，様々な手法を考案．
 - **タッチ検知と筆圧による線の太さ変化**
-  - [surfaceTouchEvent.pde](./fude_veatpro_android6/surfaceTouchEvent.pde)
+  - [surfaceTouchEvent.pde](./fude_veatpro_android8/surfaceTouchEvent.pde)
     - タブレット画面へのタッチを検知し，画面に加わった圧力値を取得する．
     - 取得した圧力値は非常に小さく，その変化も微小なため，累乗変換をして筆跡に適用．
 - **掠れ線の描画**
-  - [Kasure.pde](./fude_veatpro_android6/Kasure.pde)
-    - 筆を一定速度以上で描画/墨量が一定量以上減少すると掠れ線へ移行する．
-    - 掠れ線は複数の線と点を同時に描画する手法によって再現．
+  - 掠れ線にするかの判定は[scene_play.pde](./fude_veatpro_android8/scene_play.pde)で行う．筆を一定速度以上で描画/墨量が一定量以上減少すると掠れ線へ移行する．
+  - [KasureBrush.pde](./fude_veatpro_android8/KasureBrush.pde)
+    - 筆が通った範囲のピクセルを1つずつ判定し，毛に残っている墨の量が「紙の凹凸」+「毛1本ごとのムラ」より多い時だけ墨を付ける（[Kasure_test16](#ピクセル単位で墨の付き方を判定する掠れ表現)の方式）．
+    - 掠れの強さと毛の粗さは，墨残量メーターの減り方から自動で決める．
+    - 輪郭ははっきり残したまま内側に白い筋が出て，墨が減るほど毛の跡だけが残るようになる．
+  - [Kasure.pde](./fude_veatpro_android8/Kasure.pde)
+    - 以前の方式（複数の線と点を同時に描画する手法）．現在は使っていない．
 - **永字八法の再現**
   - 永字八法（とめ・はね・はらいなど）を再現するため，4つの図形を組み合わせた「筆跡モデル」を考案．
   - 筆跡モデルは，1.黒線，2.雫型透過画像，3.毛先の広がり線，4.側面補間線により構成．
-  - [fude_line.pde](./fude_veatpro_android6/fude_line.pde)
-    - 毛先の広がり線の広がり方を筆圧によって制御．他の図形は[scene_play.pde](./fude_veatpro_android6/scene_play.pde)にて制御．
-  - [deg_get.pde](./fude_veatpro_android6/deg_get.pde) / [deg_reset.pde](./fude_veatpro_android6/deg_reset.pde)
+  - [fude_line.pde](./fude_veatpro_android8/fude_line.pde)
+    - 毛先の広がり線の広がり方を筆圧によって制御．他の図形は[scene_play.pde](./fude_veatpro_android8/scene_play.pde)にて制御．
+  - [deg_get.pde](./fude_veatpro_android8/deg_get.pde) / [deg_reset.pde](./fude_veatpro_android8/deg_reset.pde)
     - 書道は筆は細かく回転し，その挙動によって筆跡が変化する．
     - 現在の筆の進行方向などを取得し，目標の筆角度になるように筆跡モデルを回転制御．
 
 ### 2. 作品データベース管理
-- [ConnectToDatabase.pde](./fude_veatpro_android6/ConnectToDatabase.pde) / [DBHelper.pde](./fude_veatpro_android6/DBHelper.pde)
+- [ConnectToDatabase.pde](./fude_veatpro_android8/ConnectToDatabase.pde) / [DBHelper.pde](./fude_veatpro_android8/DBHelper.pde)
   - SQLiteを用いたデータベースの管理，アクセスの制御．
-- [SaveScreenshotToDatabase.pde](./fude_veatpro_android6/SaveScreenshotToDatabase.pde)
-  - 描画画面をバイト列（Blob）へ変換しデータベースへ格納．
-- [LoadImageFromBytes.pde](./fude_veatpro_android6/LoadImageFromBytes.pde) / [LoadImages.pde](./fude_veatpro_android6/LoadImages.pde)
+- [SaveScreenshotToDatabase.pde](./fude_veatpro_android8/SaveScreenshotToDatabase.pde)
+  - タイトル入力画面で入力されたタイトルと作品の画像を，バイト列（Blob）へ変換しデータベースへ格納．
+- [LoadImageFromBytes.pde](./fude_veatpro_android8/LoadImageFromBytes.pde) / [LoadImages.pde](./fude_veatpro_android8/LoadImages.pde)
   - データベースから取り出したバイト列を画像に変換してロード．
-- [DisplayGallery.pde](./fude_veatpro_android6/DisplayGallery.pde)
-  - ロードした作品をギャラリー画面に表示．
-- [SelectImage.pde](./fude_veatpro_android6/SelectImage.pde) / [ShowImageInfo.pde](./fude_veatpro_android6/ShowImageInfo.pde)
-  - 表示された任意の作品をタップすると，作品の作成日時・タイトルなどの詳細を表示．
-- [DeleteSelectedImage.pde](./fude_veatpro_android6/DeleteSelectedImage.pde) / [RemoveImageFromArray.pde](./fude_veatpro_android6/RemoveImageFromArray.pde)
+- [DisplayGallery.pde](./fude_veatpro_android8/DisplayGallery.pde)
+  - ロードした作品を和紙の台紙に載せて作品閲覧画面に表示．スクロールに対応．
+- [SelectImage.pde](./fude_veatpro_android8/SelectImage.pde) / [ShowImageInfo.pde](./fude_veatpro_android8/ShowImageInfo.pde)
+  - 表示された任意の作品をタップすると，作品の題名・作成日と，削除・書き出し・閉じるボタンを表示．
+- [DeleteSelectedImage.pde](./fude_veatpro_android8/DeleteSelectedImage.pde) / [RemoveImageFromArray.pde](./fude_veatpro_android8/RemoveImageFromArray.pde)
   - 選択した任意の作品を削除する（画面表示/データベース両方削除）．
-- [clearGallery.pde](./fude_veatpro_android6/clearGallery.pde)
-  - 他画面に遷移した際に，ギャラリー画面に表示されている作品を画面から削除する．
- 
+- [SaveImageToMediaStore.pde](./fude_veatpro_android8/SaveImageToMediaStore.pde)
+  - 選択した作品を端末の`Pictures/MyDrawings`に画像として書き出す．
+- [clearGallery.pde](./fude_veatpro_android8/clearGallery.pde)
+  - 他画面に遷移した際に，作品閲覧画面に表示されている作品を画面から削除する．
+
 ### 3. シーン別の処理
-- [fude_veatpro_android6](./fude_veatpro_android6/fude_veatpro_android6.pde)
+- [fude_veatpro_android8.pde](./fude_veatpro_android8/fude_veatpro_android8.pde)
   - 全てのシーンへの遷移やシステムのメイン動作の処理．
-- [display_change.pde](./fude_veatpro_android6/display_change.pde)
+- [display_change.pde](./fude_veatpro_android8/display_change.pde)
   - 他シーンに移る際の待ち時間．
-- [scene_title.pde](./fude_veatpro_android6/scene_title.pde) / [scene_play.pde](./fude_veatpro_android6/scene_play.pde) / [scene_help.pde](./fude_veatpro_android6/scene_help.pde) / [scene_gallery.pde](./fude_veatpro_android6/scene_gallery.pde)
+- [scene_title.pde](./fude_veatpro_android8/scene_title.pde) / [scene_play.pde](./fude_veatpro_android8/scene_play.pde) / [scene_help.pde](./fude_veatpro_android8/scene_help.pde) / [scene_gallery.pde](./fude_veatpro_android8/scene_gallery.pde) / [scene_save.pde](./fude_veatpro_android8/scene_save.pde)
   - 各シーン別の処理．特にプレイ画面の制御では，書道特有の筆跡描画に関する記述があります．
+  - タイトル入力画面（scene_save）は，プレイ画面で「保存」を押すと表示され，タイトルを入力してから保存する．
 
 ### 4. UI制御
-- [Button.pde](./fude_veatpro_android6/Button.pde)
+- [Button.pde](./fude_veatpro_android8/Button.pde)
   - ボタン変数の宣言とボタンクラスの作成．
-- [image.pde](./fude_veatpro_android6/image.pde)
+- [image.pde](./fude_veatpro_android8/image.pde)
   - 各種ボタン，硯，筆，描画領域，タイトル画面などのイラストの宣言．
-- [TextBox.pde](./fude_veatpro_android6/TextBox.pde)
-  - テキストボックス変数の宣言とテキストボックスクラスの作成．
-- [clearDrawing.pde](./fude_veatpro_android6/clearDrawing.pde)
+- [ui_wafuu.pde](./fude_veatpro_android8/ui_wafuu.pde)
+  - 和紙の背景，巻物ボタン，筆文字フォント（YujiSyuku）など，タイトル入力画面・作品閲覧画面を和風にするための部品．
+- [TitleEditText.pde](./fude_veatpro_android8/TitleEditText.pde)
+  - タイトル入力欄．Android標準の入力欄（EditText）を重ねて表示し，日本語で入力できるようにしている．
+- [TextBox.pde](./fude_veatpro_android8/TextBox.pde)
+  - テキストボックス変数の宣言とテキストボックスクラスの作成（以前のタイトル入力欄. 英字のみ入力可能）．
+- [clearDrawing.pde](./fude_veatpro_android8/clearDrawing.pde)
   - 描画領域のリセット．
 
  ---
@@ -150,22 +164,25 @@
 
 ---
 
-## 🆕 メインシステム android8
-- [fude_veatpro_android8](./fude_veatpro_android8/)
-- android6をもとに，Kasure_test16の掠れ表現の統合とUIの改良を行ったもの．
+## 🔄 android6からの変更点
+[fude_veatpro_android8]({A})で，android6から変更した内容です．
 - **掠れ表現の統合**
-  - [KasureBrush.pde](./fude_veatpro_android8/KasureBrush.pde)：Kasure_test16の方式で掠れ線を描画．掠れ線にするかの判定はandroid6のまま．
-  - 掠れの強さと毛の粗さは，墨残量メーターの減り方から自動で決める（スライダーは非表示）．
+  - [Kasure_test16](#ピクセル単位で墨の付き方を判定する掠れ表現)の方式を[KasureBrush.pde]({A}KasureBrush.pde)として統合．掠れ線にするかの判定はandroid6のまま．
+  - test16では検証用スライダーで決めていた掠れの強さと毛の粗さを，墨残量メーターの減り方から自動で決めるようにした．
   - 画面に直接描き重ねる方式のため，前のフレームから増えた墨だけを描き，半透明部分が濃くならないようにした．
 - **保存の流れ**
-  - [scene_save.pde](./fude_veatpro_android8/scene_save.pde)：「保存」を押すとタイトル入力画面へ移り，タイトルを入力してから保存する．
-  - [TitleEditText.pde](./fude_veatpro_android8/TitleEditText.pde)：Android標準の入力欄を重ね，日本語で入力できるようにした．
+  - 描画領域の上部に常に出ていたタイトル入力欄をなくし，「保存」を押すとタイトル入力画面へ移るようにした．
+  - Android標準の入力欄を重ね，日本語でタイトルを入力できるようにした．
+  - タイトル入力画面から戻った時は，保存を押す前の画面を描き戻し，続きを書けるようにした．
 - **和風UI**
-  - [ui_wafuu.pde](./fude_veatpro_android8/ui_wafuu.pde)：和紙の背景，巻物ボタン，筆文字フォント（YujiSyuku）をまとめた部品．
-  - タイトル入力画面と作品閲覧画面を，タイトル画面・プレイ画面と同じ雰囲気にした．
+  - タイトル入力画面と作品閲覧画面を，タイトル画面・プレイ画面のイラスト（和紙の背景，巻物ボタン，文字画像）を使って同じ雰囲気にした．
+  - 作品閲覧画面の赤い四角のボタンをなくし，巻物ボタン（終了・削除・書き出し・閉じる）にした．
+  - 文字画像がない文字は筆文字フォント（YujiSyuku）で表示．
 - **不具合の修正**
   - 筆圧が0.211を超えると角度計算がNaNになり，アプリが固まる問題．
   - 作品の情報を一度閉じると，次に開こうとした時に落ちる問題．
   - スクロール後に選ばれる作品がずれる問題，スクロールしただけで作品が選ばれる問題．
   - 作品閲覧でデータベースを毎フレーム読み込んでいた問題．
   - `surfaceTouchEvent`から`touchMoved()`/`touchEnded()`が二重に呼ばれていた問題．
+- **その他**
+  - アプリのパッケージ名を`processing.test.fude_veatpro_android8`にし，android6とは別のアプリとしてインストールされるようにした．
